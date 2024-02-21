@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:macrohard/pages/home_page.dart';
+import 'package:macrohard/auth/auth_stream.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -17,13 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Water NOW!!!',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(title: 'Flutter Demo Home Page'),
+      home: const AuthStream(),
     );
   }
 }

@@ -24,6 +24,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   screen_brightness: ^1.0.0
   firebase_core: ^2.25.4
+  firebase_auth: ^4.17.4
 
 dev_dependencies:
   flutter_test:
