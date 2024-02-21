@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "342167863963",
+    "project_id": "water-drinker-9000",
+    "storage_bucket": "water-drinker-9000.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342167863963:android:514d95561ecfbdc2ba7c3e",
+        "android_client_info": {
+          "package_name": "com.example.macrohard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBp_eTbeaFueNN-TT3fDW4-qEkhibkOO68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
