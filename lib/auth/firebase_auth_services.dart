@@ -5,6 +5,7 @@ class FirebaseAuthServices {
   Future<void> signUp(
       BuildContext context, String email, String password) async {
     try {
+      debugPrint("SIGNING UP");
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -25,6 +26,7 @@ class FirebaseAuthServices {
   Future<void> signIn(
       BuildContext context, String email, String password) async {
     try {
+      debugPrint("SIGNING IN");
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
