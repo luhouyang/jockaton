@@ -21,6 +21,15 @@ class AuthStream extends StatelessWidget {
           );
         } else if (snapshot.hasData) {
           return const HomePage();
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          {
+            debugPrint("Loading success");
+            return Center(
+                child: LoadingAnimationWidget.staggeredDotsWave(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              size: 100,
+            ));
+          }
         } else {
           return const LoginPage();
         }

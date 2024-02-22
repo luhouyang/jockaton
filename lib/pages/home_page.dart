@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:macrohard/auth/firebase_auth_services.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,6 +35,11 @@ class _HomePageState extends State<HomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            TextButton(
+                onPressed: () async {
+                  await FirebaseAuthServices().logout();
+                },
+                child: Text("LOGOUT"))
           ],
         ),
       ),

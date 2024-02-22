@@ -120,8 +120,8 @@ class _LoginPageState extends State<LoginPage> {
                     inputButtonWidget(() async {
                       await FirebaseAuthServices().signUp(
                           context,
-                          inEmailTextController.text,
-                          inPassTextController.text);
+                          upEmailTextController.text,
+                          upPassTextController.text);
                     }, "SIGN UP"),
                     Divider(color: Colors.blue[900], height: 2.0),
                     Padding(
