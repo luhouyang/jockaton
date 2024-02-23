@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:macrohard/auth/auth_stream.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:macrohard/auth/auth_usecase.dart';
+import 'package:macrohard/services/crazy_rgb_usecase.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -16,14 +19,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Water NOW!!!',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const AuthStream(),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => AuthUseCase(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => CrazyRGBUsecase(),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Water NOW!!!',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner: false,
+          home: const AuthStream(),
+        ));
   }
 }
