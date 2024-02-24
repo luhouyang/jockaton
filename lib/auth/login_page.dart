@@ -8,6 +8,7 @@ import 'package:macrohard/auth/firebase_auth_services.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:provider/provider.dart';
 
+// add color class
 class LoginColorScheme {
   Color h1Text = Colors.blue[900]!;
   Color linkText = Colors.lightBlue[200]!;
@@ -32,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isSignIn = true;
 
+  // copy paste this for color
   bool _isCrazyMode = false;
   LoginColorScheme loginColorScheme = LoginColorScheme();
   late Timer _timer;
@@ -41,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       debugPrint("crazy");
       setState(() {
+        // add every colour case
         loginColorScheme.h1Text = Color.lerp(crazyRGBUsecase.currentColor,
             Colors.blue[900]!, 0.5)!;
         loginColorScheme.linkText = Color.lerp(crazyRGBUsecase.currentColor,
@@ -74,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_isCrazyMode) _timer.cancel();
     super.dispose();
   }
+  // color code ends here
 
   @override
   Widget build(BuildContext context) {
