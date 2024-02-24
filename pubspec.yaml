@@ -27,6 +27,7 @@ dependencies:
   firebase_auth: ^4.17.4
   percent_indicator: ^4.2.3
   email_validator: ^2.1.17
+  flutter_emoji: ^2.5.1
 
 dev_dependencies:
   flutter_test:
