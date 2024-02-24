@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isSignIn = true;
 
   // copy paste this for color
+  bool _isCrazyMode = false;
   LoginColorScheme loginColorScheme = LoginColorScheme();
   late Timer _timer;
   void _startTimer() {
@@ -67,9 +68,11 @@ class _LoginPageState extends State<LoginPage> {
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     if (!crazyRGBUsecase.isCrazyMode) {
       crazyRGBUsecase.changeCrazy();
+      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _startTimer();
     } else {
       crazyRGBUsecase.changeCrazy();
+      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _timer.cancel();
       loginColorScheme = LoginColorScheme();
       setState(() {});
@@ -77,10 +80,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void dispose() {
+  void initState() {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
-    if (crazyRGBUsecase.isCrazyMode) _timer.cancel();
+    _isCrazyMode = crazyRGBUsecase.isCrazyMode;
+    if (_isCrazyMode) {
+      _startTimer();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (_isCrazyMode) _timer.cancel();
     super.dispose();
   }
   // color code ends here
@@ -88,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     AuthUseCase authUseCase = Provider.of<AuthUseCase>(context, listen: false);
-    
+
     return SafeArea(
         child: Scaffold(
       backgroundColor: _isCrazyMode ? loginColorScheme.button : Colors.white,

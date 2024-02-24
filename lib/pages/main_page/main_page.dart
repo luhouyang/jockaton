@@ -1,14 +1,19 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:macrohard/auth/login_page.dart';
 import 'package:macrohard/pages/home_page.dart';
 import 'package:macrohard/pages/main_page/navigation_usecase.dart';
 import 'package:macrohard/pages/profile_page.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:provider/provider.dart';
+
+// add color class
+class MainColorScheme {
+  Color bottomBar = Colors.blue[900]!;
+  Color middleButton = Colors.tealAccent;
+  Color activeColor = Colors.white;
+}
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,7 +24,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   // copy paste this for color
-  LoginColorScheme loginColorScheme = LoginColorScheme();
+  bool _isCrazyMode = false;
+  MainColorScheme mainColorScheme = MainColorScheme();
   late Timer _timer;
   void _startTimer() {
     CrazyRGBUsecase crazyRGBUsecase =
@@ -28,18 +34,12 @@ class _MainPageState extends State<MainPage> {
       debugPrint("crazy");
       setState(() {
         // add every colour case
-        loginColorScheme.h1Text = Color.lerp(crazyRGBUsecase.currentColor,
+        mainColorScheme.bottomBar = Color.lerp(crazyRGBUsecase.currentColor,
             Colors.blue[900]!, Random().nextDouble())!;
-        loginColorScheme.linkText = Color.lerp(crazyRGBUsecase.currentColor,
-            Colors.lightBlue[200]!, Random().nextDouble())!;
-        loginColorScheme.normalText = Color.lerp(
-            crazyRGBUsecase.currentColor, Colors.black, Random().nextDouble())!;
-        loginColorScheme.border = Color.lerp(crazyRGBUsecase.currentColor,
-            Colors.lightBlue, Random().nextDouble())!;
-        loginColorScheme.shadow = Color.lerp(
-            crazyRGBUsecase.currentColor, Colors.grey, Random().nextDouble())!;
-        loginColorScheme.button = Color.lerp(crazyRGBUsecase.currentColor,
+        mainColorScheme.middleButton = Color.lerp(crazyRGBUsecase.currentColor,
             Colors.tealAccent, Random().nextDouble())!;
+        mainColorScheme.activeColor = Color.lerp(
+            crazyRGBUsecase.currentColor, Colors.white, Random().nextDouble())!;
       });
     });
   }
@@ -49,35 +49,62 @@ class _MainPageState extends State<MainPage> {
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     if (!crazyRGBUsecase.isCrazyMode) {
       crazyRGBUsecase.changeCrazy();
+      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _startTimer();
     } else {
       crazyRGBUsecase.changeCrazy();
+      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _timer.cancel();
-      loginColorScheme = LoginColorScheme();
+      mainColorScheme = MainColorScheme();
       setState(() {});
     }
   }
 
   @override
-  void dispose() {
+  void initState() {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
-    if (crazyRGBUsecase.isCrazyMode) _timer.cancel();
+    _isCrazyMode = crazyRGBUsecase.isCrazyMode;
+    if (_isCrazyMode) {
+      _startTimer();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (_isCrazyMode) _timer.cancel();
     super.dispose();
   }
   // color code ends here
-  
+
   @override
   Widget build(BuildContext context) {
     return Consumer<NavigationUseCase>(
       builder: (context, navUseCase, child) {
         return Scaffold(
-          body: SizedBox(
-            child: changePage(navUseCase.bottomNavigationIdx),
+          body: Stack(
+            children: [
+              SizedBox(
+                child: changePage(navUseCase.bottomNavigationIdx),
+              ),
+              Positioned(
+                top: 20,
+                right: 10,
+                child: IconButton(
+                  iconSize: 45,
+                  onPressed: () => crazyButton(),
+                  icon: Icon(
+                    Icons.warning_amber_rounded,
+                    color: mainColorScheme.bottomBar,
+                  ),
+                ),
+              ),
+            ],
           ),
           floatingActionButton: FloatingActionButton(
-              foregroundColor: Colors.blue[900],
-              backgroundColor: Colors.tealAccent,
+              foregroundColor: mainColorScheme.bottomBar,
+              backgroundColor: mainColorScheme.middleButton,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () {
@@ -88,9 +115,9 @@ class _MainPageState extends State<MainPage> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: AnimatedBottomNavigationBar(
-              backgroundColor: Colors.blue[900],
-              activeColor: Colors.white,
-              inactiveColor: Colors.white.withOpacity(0.4),
+              backgroundColor: mainColorScheme.bottomBar,
+              activeColor: mainColorScheme.activeColor,
+              inactiveColor: mainColorScheme.activeColor.withOpacity(0.4),
               activeIndex: navUseCase.bottomNavigationIdx,
               icons: const [
                 Icons.home_filled,
