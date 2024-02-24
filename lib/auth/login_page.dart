@@ -324,6 +324,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextFormField(
         validator: (value) => validator(value),
         controller: controller,
+        style: TextStyle(color: loginColorScheme.h1Text),
         decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: loginColorScheme.border),
