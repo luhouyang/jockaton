@@ -16,6 +16,7 @@ class LoginColorScheme {
   Color border = Colors.lightBlue;
   Color shadow = Colors.grey;
   Color button = Colors.tealAccent;
+  Color textFeild = Colors.purple;
 }
 
 class LoginPage extends StatefulWidget {
@@ -55,6 +56,8 @@ class _LoginPageState extends State<LoginPage> {
             crazyRGBUsecase.currentColor, Colors.grey, Random().nextDouble())!;
         loginColorScheme.button = Color.lerp(crazyRGBUsecase.currentColor,
             Colors.tealAccent, Random().nextDouble())!;
+        loginColorScheme.textFeild = Color.lerp(
+            crazyRGBUsecase.currentColor, Colors.red, Random().nextDouble())!;
       });
     });
   }
@@ -88,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
     
     return SafeArea(
         child: Scaffold(
+      backgroundColor: _isCrazyMode ? loginColorScheme.button : Colors.white,
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Stack(
@@ -95,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               margin: const EdgeInsets.fromLTRB(25, 150, 25, 150),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: _isCrazyMode ? loginColorScheme.border : Colors.white,
                 border: Border.all(color: loginColorScheme.border, width: 1.0),
                 borderRadius: BorderRadius.circular(32.0),
                 boxShadow: [
@@ -329,11 +333,12 @@ class _LoginPageState extends State<LoginPage> {
         controller: controller,
         style: TextStyle(color: loginColorScheme.h1Text),
         decoration: InputDecoration(
+            filled: true,
+            fillColor: _isCrazyMode ? loginColorScheme.textFeild : Colors.white,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: loginColorScheme.border),
               borderRadius: BorderRadius.circular(32.0),
             ),
-            fillColor: loginColorScheme.shadow,
             focusColor: loginColorScheme.linkText,
             hintText: hint,
             hintStyle: TextStyle(color: loginColorScheme.h1Text)),
