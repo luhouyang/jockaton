@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50.0)),
-                      child: const Placeholder(),
+                      child: Image.asset("assets/profile_placeholder.jpg"),
                     ),
                     const Positioned(
                         right: 5, bottom: 5, child: Icon(Icons.cancel)),

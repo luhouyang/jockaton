@@ -83,6 +83,7 @@ class _MainPageState extends State<MainPage> {
     return Consumer<NavigationUseCase>(
       builder: (context, navUseCase, child) {
         return Scaffold(
+          backgroundColor: _isCrazyMode ? mainColorScheme.middleButton : Colors.white,
           body: Stack(
             children: [
               SizedBox(
