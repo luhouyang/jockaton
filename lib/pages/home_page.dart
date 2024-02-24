@@ -78,8 +78,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    CrazyRGBUsecase crazyRGBUsecase =
+        Provider.of<CrazyRGBUsecase>(context, listen: false);
     return Scaffold(
-      backgroundColor: _isCrazyMode ? loginColorScheme.button : Colors.white,
+      backgroundColor:
+          crazyRGBUsecase.isCrazyMode ? loginColorScheme.button : Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
