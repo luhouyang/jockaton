@@ -29,6 +29,7 @@ dependencies:
   percent_indicator: ^4.2.3
   email_validator: ^2.1.17
   flutter_emoji: ^2.5.1
+  hive: ^2.2.3
 
 dev_dependencies:
   flutter_test:
