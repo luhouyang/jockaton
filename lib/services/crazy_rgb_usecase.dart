@@ -9,7 +9,8 @@ class CrazyRGBUsecase extends ChangeNotifier {
 
   CrazyRGBUsecase() {
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      currentColorIndex = (currentColorIndex + 1) % MyColors().gamingRGB.length;
+      currentColorIndex =
+          (currentColorIndex + 60) % MyColors().gamingRGB.length;
       currentColor = MyColors().gamingRGB[currentColorIndex];
       notifyListeners();
     });

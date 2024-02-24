@@ -45,17 +45,17 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         // add every colour case
         loginColorScheme.h1Text = Color.lerp(crazyRGBUsecase.currentColor,
-            Colors.blue[900]!, 0.5)!;
+            Colors.blue[900]!, Random().nextDouble())!;
         loginColorScheme.linkText = Color.lerp(crazyRGBUsecase.currentColor,
-            Colors.lightBlue[200]!, 0.5)!;
+            Colors.lightBlue[200]!, Random().nextDouble())!;
         loginColorScheme.normalText = Color.lerp(
-            crazyRGBUsecase.currentColor, Colors.black, 0.5)!;
+            crazyRGBUsecase.currentColor, Colors.black, Random().nextDouble())!;
         loginColorScheme.border = Color.lerp(crazyRGBUsecase.currentColor,
-            Colors.lightBlue, 0.5)!;
+            Colors.lightBlue, Random().nextDouble())!;
         loginColorScheme.shadow = Color.lerp(
-            crazyRGBUsecase.currentColor, Colors.grey, 0.5)!;
+            crazyRGBUsecase.currentColor, Colors.grey, Random().nextDouble())!;
         loginColorScheme.button = Color.lerp(crazyRGBUsecase.currentColor,
-            Colors.tealAccent, 0.5)!;
+            Colors.tealAccent, Random().nextDouble())!;
       });
     });
   }
@@ -295,7 +295,10 @@ class _LoginPageState extends State<LoginPage> {
               child: IconButton(
                 iconSize: 45,
                 onPressed: () => crazyButton(),
-                icon: Icon(Icons.warning_amber_rounded, color: loginColorScheme.h1Text,),
+                icon: Icon(
+                  Icons.warning_amber_rounded,
+                  color: loginColorScheme.h1Text,
+                ),
               ),
             ),
           ],
