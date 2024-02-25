@@ -333,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String passwordVerify(value) {
-    return value != null ? "" : "Please enter a valid email";
+    return value != null ? "" : "Please enter a valid password";
   }
 
   Widget inputTextWidget(
