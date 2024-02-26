@@ -13,7 +13,7 @@ class UserEntity {
   factory UserEntity.fromMap(Map<String, dynamic> map) {
     return UserEntity(
         name: map['name'],
-        favouriteFood: map['favouriteFoood'],
+        favouriteFood: map['favouriteFood'],
         funFact: map['funFact'],
         interval: map['interval'],
         );

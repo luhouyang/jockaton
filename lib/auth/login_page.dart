@@ -42,8 +42,9 @@ class _LoginPageState extends State<LoginPage> {
   void _startTimer() {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
       debugPrint("crazy");
+      if (!mounted) return;
       setState(() {
         // add every colour case
         loginColorScheme.h1Text = Color.lerp(crazyRGBUsecase.currentColor,
@@ -76,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
       _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _timer.cancel();
       loginColorScheme = LoginColorScheme();
+      if (!mounted) return;
       setState(() {});
     }
   }

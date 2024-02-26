@@ -24,30 +24,16 @@ class _HomePageState extends State<HomePage> {
   void _startTimer() {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _timer =
+        Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
       debugPrint("crazy");
+      if (!mounted) return;
       setState(() {
         // add every colour case
         loginColorScheme.button = Color.lerp(crazyRGBUsecase.currentColor,
             Colors.tealAccent, Random().nextDouble())!;
       });
     });
-  }
-
-  void crazyButton() {
-    CrazyRGBUsecase crazyRGBUsecase =
-        Provider.of<CrazyRGBUsecase>(context, listen: false);
-    if (!crazyRGBUsecase.isCrazyMode) {
-      crazyRGBUsecase.changeCrazy();
-      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
-      _startTimer();
-    } else {
-      crazyRGBUsecase.changeCrazy();
-      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
-      _timer.cancel();
-      loginColorScheme = LoginColorScheme();
-      setState(() {});
-    }
   }
 
   @override
@@ -71,7 +57,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     CrazyRGBUsecase crazyRGBUsecase =
-        Provider.of<CrazyRGBUsecase>(context, listen: false);
+        Provider.of<CrazyRGBUsecase>(context, listen: true);
+    if (_isCrazyMode != crazyRGBUsecase.isCrazyMode) {
+      if (!_isCrazyMode) {
+      _isCrazyMode = !_isCrazyMode;
+      _startTimer();
+    } else {
+      _isCrazyMode = !_isCrazyMode;
+      _timer.cancel();
+      loginColorScheme = LoginColorScheme();
+      setState(() {});
+    }
+    }
+
     return Scaffold(
       backgroundColor:
           crazyRGBUsecase.isCrazyMode ? loginColorScheme.button : Colors.white,

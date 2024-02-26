@@ -30,8 +30,10 @@ class _MainPageState extends State<MainPage> {
   void _startTimer() {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _timer =
+        Timer.periodic(Duration(milliseconds: Random().nextInt(50)), (timer) {
       debugPrint("crazy");
+      if (!mounted) return;
       setState(() {
         // add every colour case
         mainColorScheme.bottomBar = Color.lerp(crazyRGBUsecase.currentColor,
@@ -56,6 +58,7 @@ class _MainPageState extends State<MainPage> {
       _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _timer.cancel();
       mainColorScheme = MainColorScheme();
+      if (!mounted) return;
       setState(() {});
     }
   }
@@ -83,14 +86,15 @@ class _MainPageState extends State<MainPage> {
     return Consumer<NavigationUseCase>(
       builder: (context, navUseCase, child) {
         return Scaffold(
-          backgroundColor: _isCrazyMode ? mainColorScheme.middleButton : Colors.white,
+          backgroundColor:
+              _isCrazyMode ? mainColorScheme.middleButton : Colors.white,
           body: Stack(
             children: [
               SizedBox(
                 child: changePage(navUseCase.bottomNavigationIdx),
               ),
               Positioned(
-                top: 20,
+                top: 25,
                 right: 10,
                 child: IconButton(
                   iconSize: 45,
@@ -115,20 +119,13 @@ class _MainPageState extends State<MainPage> {
               child: const Icon(Icons.donut_large_sharp)),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: AnimatedBottomNavigationBar(
+          bottomNavigationBar: BottomNavigationBar(
               backgroundColor: mainColorScheme.bottomBar,
-              activeColor: mainColorScheme.activeColor,
-              inactiveColor: mainColorScheme.activeColor.withOpacity(0.4),
-              activeIndex: navUseCase.bottomNavigationIdx,
-              icons: const [
-                Icons.home_filled,
-                Icons.person,
-              ],
-              gapLocation: GapLocation.center,
-              notchSmoothness: NotchSmoothness.softEdge,
-              blurEffect: true,
-              leftCornerRadius: 20,
-              rightCornerRadius: 20,
+              selectedItemColor: mainColorScheme.activeColor,
+              unselectedItemColor: mainColorScheme.activeColor.withOpacity(0.4),
+              currentIndex: navUseCase.bottomNavigationIdx,
+              items: [BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "home"),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: "profile")],
               onTap: (index) => navUseCase.changeIdx(index)),
         );
       },

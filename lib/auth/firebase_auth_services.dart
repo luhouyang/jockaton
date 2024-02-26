@@ -5,8 +5,8 @@ import 'package:macrohard/services/firestore_database.dart';
 import 'package:macrohard/services/user_usecase.dart';
 
 class FirebaseAuthServices {
-  Future<void> signUp(
-      BuildContext context, String email, String password, UserUsecase userUsecase) async {
+  Future<void> signUp(BuildContext context, String email, String password,
+      UserUsecase userUsecase) async {
     try {
       debugPrint("SIGNING UP");
       await FirebaseAuth.instance
@@ -14,13 +14,14 @@ class FirebaseAuthServices {
         email: email,
         password: password,
       )
-          .then((value) async {
+      .then((value) async {
         UserEntity userEntity = UserEntity(
             name: email,
             favouriteFood: "BIG MEAT",
             funFact: "I CAN FLYYYYY",
             interval: 60);
-        await FirestoreDatabase().addUser(userEntity);
+        await userUsecase.setUser(userEntity);
+        await FirestoreDatabase().addUser(userEntity, value.user!.uid);
       });
     } catch (e) {
       // Handle authentication exceptions
@@ -28,14 +29,16 @@ class FirebaseAuthServices {
     }
   }
 
-  Future<void> signIn(
-      BuildContext context, String email, String password, UserUsecase userUsecase) async {
+  Future<void> signIn(BuildContext context, String email, String password,
+      UserUsecase userUsecase) async {
     try {
       debugPrint("SIGNING IN");
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      ).then((value) async {
+         await userUsecase.setUser(await FirestoreDatabase().getUser(value.user!.uid));
+      });
     } catch (e) {
       // Handle authentication exceptions
       debugPrint("Error during sign-in: $e");

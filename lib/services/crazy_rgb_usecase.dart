@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:macrohard/utilities/my_colors.dart';
 
@@ -10,9 +11,9 @@ class CrazyRGBUsecase extends ChangeNotifier {
   bool isCrazyMode = false;
 
   CrazyRGBUsecase() {
-    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
       currentColorIndex =
-          (currentColorIndex + 60) % MyColors().gamingRGB.length;
+          (currentColorIndex + Random().nextInt(50)) % MyColors().gamingRGB.length;
       currentColor = MyColors().gamingRGB[currentColorIndex];
       notifyListeners();
     });
