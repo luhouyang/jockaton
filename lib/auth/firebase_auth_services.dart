@@ -14,14 +14,14 @@ class FirebaseAuthServices {
         email: email,
         password: password,
       )
-      .then((value) async {
+          .then((value) async {
         UserEntity userEntity = UserEntity(
             name: email,
             favouriteFood: "BIG MEAT",
             funFact: "I CAN FLYYYYY",
             interval: 60);
         await userUsecase.setUser(userEntity);
-        await FirestoreDatabase().addUser(userEntity, value.user!.uid);
+        await FirestoreDatabase().setUser(userEntity, value.user!.uid);
       });
     } catch (e) {
       // Handle authentication exceptions
@@ -33,11 +33,14 @@ class FirebaseAuthServices {
       UserUsecase userUsecase) async {
     try {
       debugPrint("SIGNING IN");
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
         email: email,
         password: password,
-      ).then((value) async {
-         await userUsecase.setUser(await FirestoreDatabase().getUser(value.user!.uid));
+      )
+          .then((value) async {
+        await userUsecase
+            .setUser(await FirestoreDatabase().getUser(value.user!.uid));
       });
     } catch (e) {
       // Handle authentication exceptions

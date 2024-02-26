@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:macrohard/pages/home_page.dart';
 import 'package:macrohard/pages/main_page/navigation_usecase.dart';
@@ -124,9 +123,11 @@ class _MainPageState extends State<MainPage> {
               selectedItemColor: mainColorScheme.activeColor,
               unselectedItemColor: mainColorScheme.activeColor.withOpacity(0.4),
               currentIndex: navUseCase.bottomNavigationIdx,
-              items: [BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "home"),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: "profile")],
-              onTap: (index) => navUseCase.changeIdx(index)),
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "home"),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: "profile")],
+              onTap: (index) => navUseCase.changeIdx(index),
+              ),
         );
       },
     );

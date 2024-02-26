@@ -5,9 +5,12 @@ import 'package:macrohard/entities/user_entity.dart';
 class FirestoreDatabase {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  Future<void> addUser(UserEntity userEntity, String uid) async {
+  Future<void> setUser(UserEntity userEntity, String uid) async {
     try {
-      await firebaseFirestore.collection("users").add(userEntity.toMap());
+      await firebaseFirestore
+          .collection("users")
+          .doc(uid)
+          .set(userEntity.toMap());
     } catch (e) {
       debugPrint("Error add user: $e");
     }
@@ -18,7 +21,7 @@ class FirestoreDatabase {
       DocumentSnapshot snapshot =
           await firebaseFirestore.collection("users").doc(uid).get();
       Map<String, dynamic> map = snapshot.data() as Map<String, dynamic>;
-      UserEntity userEntity =  UserEntity.fromMap(map);
+      UserEntity userEntity = UserEntity.fromMap(map);
       return userEntity;
     } catch (e) {
       debugPrint("Error get user: $e");

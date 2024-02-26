@@ -70,10 +70,8 @@ class _ProfilePageState extends State<ProfilePage> {
     if (userUsecase.userEntity.name == "name" &&
         userUsecase.userEntity.favouriteFood == "favourite food" &&
         userUsecase.userEntity.funFact == "fun fact") {
-      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-      UserEntity userEntity =
-          await FirestoreDatabase().getUser(firebaseAuth.currentUser!.uid);
-      await userUsecase.setUser(userEntity);
+      await userUsecase.setUser(await FirestoreDatabase()
+          .getUser(FirebaseAuth.instance.currentUser!.uid));
       nameTextController.text = userUsecase.userEntity.name;
       foodTextController.text = userUsecase.userEntity.favouriteFood;
       factTextController.text = userUsecase.userEntity.funFact;
@@ -122,6 +120,8 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     }
 
+    UserUsecase userUsecase = Provider.of<UserUsecase>(context, listen: false);
+
     return SafeArea(
         child: Scaffold(
       backgroundColor: crazyRGBUsecase.isCrazyMode
@@ -165,8 +165,30 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          String uid = FirebaseAuth.instance.currentUser!.uid;
                           setState(() {
+                            if (_isEditing) {
+                              UserEntity newUserEntity = UserEntity(
+                                  name: nameTextController.text,
+                                  favouriteFood: foodTextController.text,
+                                  funFact: factTextController.text,
+                                  interval: userUsecase.userEntity.interval);
+                              FirestoreDatabase().setUser(newUserEntity, uid);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: profileColorScheme.shadow,
+                                  content: Text(
+                                    "Editing Mode",
+                                    style: TextStyle(
+                                        color: _isCrazyMode
+                                            ? profileColorScheme.linkText
+                                            : Colors.white),
+                                  ),
+                                ),
+                              );
+                            }
                             _isEditing = !_isEditing;
                           });
                         },
