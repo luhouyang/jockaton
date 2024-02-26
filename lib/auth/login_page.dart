@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:macrohard/auth/auth_usecase.dart';
 import 'package:macrohard/auth/firebase_auth_services.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
+import 'package:macrohard/services/user_usecase.dart';
 import 'package:provider/provider.dart';
 
 // add color class
@@ -100,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     AuthUseCase authUseCase = Provider.of<AuthUseCase>(context, listen: false);
+    UserUsecase userUsecase = Provider.of<UserUsecase>(context, listen: false);
 
     return SafeArea(
         child: Scaffold(
@@ -190,7 +192,8 @@ class _LoginPageState extends State<LoginPage> {
                                     await FirebaseAuthServices().signIn(
                                         context,
                                         inEmailTextController.text,
-                                        inPassTextController.text);
+                                        inPassTextController.text,
+                                        userUsecase);
                                     authUseCase.changeBool(false);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -263,7 +266,8 @@ class _LoginPageState extends State<LoginPage> {
                                     await FirebaseAuthServices().signUp(
                                         context,
                                         upEmailTextController.text,
-                                        upPassTextController.text);
+                                        upPassTextController.text,
+                                        userUsecase);
                                     authUseCase.changeBool(false);
                                   },
                                   style: ElevatedButton.styleFrom(

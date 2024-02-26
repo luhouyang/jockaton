@@ -68,14 +68,6 @@ class _HomePageState extends State<HomePage> {
   }
   // color code ends here
 
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     CrazyRGBUsecase crazyRGBUsecase =
@@ -91,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () async {
                   await FirebaseAuthServices().logout();
                 },
-                child: Text("LOGOUT"))
+                child: const Text("LOGOUT"))
           ],
         ),
       ),

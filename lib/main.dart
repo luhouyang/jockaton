@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:macrohard/auth/auth_usecase.dart';
 import 'package:macrohard/pages/main_page/navigation_usecase.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
+import 'package:macrohard/services/user_usecase.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -28,7 +29,12 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => CrazyRGBUsecase(),
           ),
-          ChangeNotifierProvider(create: (context) => NavigationUseCase(),),
+          ChangeNotifierProvider(
+            create: (context) => NavigationUseCase(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => UserUsecase(),
+          ),
         ],
         child: MaterialApp(
           title: 'Water NOW!!!',

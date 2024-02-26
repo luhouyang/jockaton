@@ -118,7 +118,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 _isEditing
                     ? Column(
                         children: [
-                          inputTextWidget("name", textVerify, nameTextController)
+                          inputTextWidget("name", textVerify, nameTextController),
+                          inputTextWidget("favourite food", textVerify, nameTextController),
+                          inputTextWidget("fun fact", textVerify, nameTextController),
                         ],
                       )
                     : Column(
