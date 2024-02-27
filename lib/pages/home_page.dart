@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             const SizedBox(
-              height: 25,
+              height: 40,
             ),
             CircularPercentIndicator(
               radius: 120.0,
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
               animation: true,
               percent: userUsecase.userEntity.water / 100.0,
               center: Icon(Icons.water_drop_rounded,
-                  color: homeColorScheme.waterIconColor),
+                  size: 100, color: homeColorScheme.waterIconColor),
               footer: Text(
                 "Your Water",
                 style: TextStyle(
@@ -144,22 +144,28 @@ class _HomePageState extends State<HomePage> {
               options: CarouselOptions(),
               items: imgList
                   .map((item) => Container(
-                    decoration: BoxDecoration(
-                      color: homeColorScheme.grey,
-                      boxShadow: [
-                  BoxShadow(
-                    color: homeColorScheme.grey,
-                    blurRadius: 4,
-                    offset: const Offset(4, 8), // Shadow position
-                  ),
-                ],
-                    ),
+                        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(32.0),
+                          color: homeColorScheme.grey,
+                          boxShadow: [
+                            BoxShadow(
+                              color: homeColorScheme.grey,
+                              blurRadius: 4,
+                              offset: const Offset(4, 8), // Shadow position
+                            ),
+                          ],
+                        ),
                         child: Center(
                             child: Image.network(item,
-                                fit: BoxFit.cover, width: 1000)),
+                                fit: BoxFit.cover,
+                                color: homeColorScheme.button,
+                                colorBlendMode: BlendMode.colorBurn,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.7)),
                       ))
                   .toList(),
-            )
+            ),
           ],
         ),
       ),
