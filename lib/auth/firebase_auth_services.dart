@@ -19,7 +19,8 @@ class FirebaseAuthServices {
             name: email,
             favouriteFood: "BIG MEAT",
             funFact: "I CAN FLYYYYY",
-            interval: 60);
+            interval: 60,
+            water: 0);
         await userUsecase.setUser(userEntity);
         await FirestoreDatabase().setUser(userEntity, value.user!.uid);
       });

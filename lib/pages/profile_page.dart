@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:macrohard/auth/firebase_auth_services.dart';
 import 'package:macrohard/entities/user_entity.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:macrohard/services/firestore_database.dart';
@@ -131,8 +131,9 @@ class _ProfilePageState extends State<ProfilePage> {
         physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
+            const SizedBox(height: 25,),
             Container(
-              margin: const EdgeInsets.fromLTRB(75, 20, 75, 10),
+              margin: const EdgeInsets.fromLTRB(75, 0, 75, 10),
               child: Stack(
                 children: [
                   ClipOval(
@@ -160,49 +161,69 @@ class _ProfilePageState extends State<ProfilePage> {
                   BoxDecoration(borderRadius: BorderRadius.circular(32.0)),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          String uid = FirebaseAuth.instance.currentUser!.uid;
-                          setState(() {
-                            if (_isEditing) {
-                              UserEntity newUserEntity = UserEntity(
-                                  name: nameTextController.text,
-                                  favouriteFood: foodTextController.text,
-                                  funFact: factTextController.text,
-                                  interval: userUsecase.userEntity.interval);
-                              FirestoreDatabase().setUser(newUserEntity, uid);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: profileColorScheme.shadow,
-                                  content: Text(
-                                    "Editing Mode",
-                                    style: TextStyle(
-                                        color: _isCrazyMode
-                                            ? profileColorScheme.linkText
-                                            : Colors.white),
-                                  ),
-                                ),
-                              );
-                            }
-                            _isEditing = !_isEditing;
-                          });
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(_isEditing
-                                ? profileColorScheme.textFeild
-                                : profileColorScheme.button)),
-                        child: Text(
-                          _isEditing ? "Save" : "Edit",
-                          style:
-                              TextStyle(color: profileColorScheme.normalText),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              await FirebaseAuthServices().logout();
+                            },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(_isEditing
+                                    ? profileColorScheme.textFeild
+                                    : profileColorScheme.button)),
+                            child: Text(
+                              "LOGOUT",
+                              style:
+                                  TextStyle(color: profileColorScheme.normalText),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              String uid = FirebaseAuth.instance.currentUser!.uid;
+                              setState(() {
+                                if (_isEditing) {
+                                  UserEntity newUserEntity = UserEntity(
+                                      name: nameTextController.text,
+                                      favouriteFood: foodTextController.text,
+                                      funFact: factTextController.text,
+                                      interval: userUsecase.userEntity.interval,
+                                      water: userUsecase.userEntity.water,);
+                                  FirestoreDatabase().setUser(newUserEntity, uid);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: profileColorScheme.shadow,
+                                      content: Text(
+                                        "Editing Mode",
+                                        style: TextStyle(
+                                            color: _isCrazyMode
+                                                ? profileColorScheme.linkText
+                                                : Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                _isEditing = !_isEditing;
+                              });
+                            },
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(_isEditing
+                                    ? profileColorScheme.textFeild
+                                    : profileColorScheme.button)),
+                            child: Text(
+                              _isEditing ? "Save" : "Edit",
+                              style:
+                                  TextStyle(color: profileColorScheme.normalText),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   _isEditing
                       ? Column(

@@ -6,7 +6,8 @@ class UserUsecase extends ChangeNotifier {
       name: "name",
       favouriteFood: "favourite food",
       funFact: "fun fact",
-      interval: 60);
+      interval: 60,
+      water: 0);
 
   Future<void> setUser(UserEntity newUserEntity) async {
     userEntity = newUserEntity;
