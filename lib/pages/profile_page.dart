@@ -31,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
   var nameTextController = TextEditingController();
   var foodTextController = TextEditingController();
   var factTextController = TextEditingController();
+  var waterTextController = TextEditingController();
 
   bool _isEditing = false;
 
@@ -75,6 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
       nameTextController.text = userUsecase.userEntity.name;
       foodTextController.text = userUsecase.userEntity.favouriteFood;
       factTextController.text = userUsecase.userEntity.funFact;
+      waterTextController.text = userUsecase.userEntity.water.toString();
       if (!mounted) return;
       setState(() {});
     }
@@ -94,6 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
     nameTextController.text = userUsecase.userEntity.name;
     foodTextController.text = userUsecase.userEntity.favouriteFood;
     factTextController.text = userUsecase.userEntity.funFact;
+    waterTextController.text = userUsecase.userEntity.water.toString();
     super.initState();
   }
 
@@ -131,7 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
         physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
-            const SizedBox(height: 25,),
+            const SizedBox(
+              height: 25,
+            ),
             Container(
               margin: const EdgeInsets.fromLTRB(75, 0, 75, 10),
               child: Stack(
@@ -167,62 +172,65 @@ class _ProfilePageState extends State<ProfilePage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: ElevatedButton(
-                            onPressed: () async {
-                              await FirebaseAuthServices().logout();
-                            },
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(_isEditing
-                                    ? profileColorScheme.textFeild
-                                    : profileColorScheme.button)),
-                            child: Text(
-                              "LOGOUT",
-                              style:
-                                  TextStyle(color: profileColorScheme.normalText),
-                            ),
+                          onPressed: () async {
+                            await FirebaseAuthServices().logout();
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  _isEditing
+                                      ? profileColorScheme.textFeild
+                                      : profileColorScheme.button)),
+                          child: Text(
+                            "LOGOUT",
+                            style:
+                                TextStyle(color: profileColorScheme.normalText),
                           ),
                         ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: ElevatedButton(
-                            onPressed: () async {
-                              String uid = FirebaseAuth.instance.currentUser!.uid;
-                              setState(() {
-                                if (_isEditing) {
-                                  UserEntity newUserEntity = UserEntity(
-                                      name: nameTextController.text,
-                                      favouriteFood: foodTextController.text,
-                                      funFact: factTextController.text,
-                                      interval: userUsecase.userEntity.interval,
-                                      water: userUsecase.userEntity.water,);
-                                  FirestoreDatabase().setUser(newUserEntity, uid);
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: profileColorScheme.shadow,
-                                      content: Text(
-                                        "Editing Mode",
-                                        style: TextStyle(
-                                            color: _isCrazyMode
-                                                ? profileColorScheme.linkText
-                                                : Colors.white),
-                                      ),
+                          onPressed: () async {
+                            String uid = FirebaseAuth.instance.currentUser!.uid;
+                            setState(() {
+                              if (_isEditing) {
+                                UserEntity newUserEntity = UserEntity(
+                                  name: nameTextController.text,
+                                  favouriteFood: foodTextController.text,
+                                  funFact: factTextController.text,
+                                  interval: userUsecase.userEntity.interval,
+                                  water: userUsecase.userEntity.water,
+                                );
+                                FirestoreDatabase().setUser(newUserEntity, uid);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor: profileColorScheme.shadow,
+                                    content: Text(
+                                      "Editing Mode",
+                                      style: TextStyle(
+                                          color: _isCrazyMode
+                                              ? profileColorScheme.linkText
+                                              : Colors.white),
                                     ),
-                                  );
-                                }
-                                _isEditing = !_isEditing;
-                              });
-                            },
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(_isEditing
-                                    ? profileColorScheme.textFeild
-                                    : profileColorScheme.button)),
-                            child: Text(
-                              _isEditing ? "Save" : "Edit",
-                              style:
-                                  TextStyle(color: profileColorScheme.normalText),
-                            ),
+                                  ),
+                                );
+                              }
+                              _isEditing = !_isEditing;
+                            });
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  _isEditing
+                                      ? profileColorScheme.textFeild
+                                      : profileColorScheme.button)),
+                          child: Text(
+                            _isEditing ? "Save" : "Edit",
+                            style:
+                                TextStyle(color: profileColorScheme.normalText),
                           ),
                         ),
+                      ),
                     ],
                   ),
                   _isEditing
@@ -241,6 +249,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             displayTextWidget(nameTextController.text),
                             displayTextWidget(foodTextController.text),
                             displayTextWidget(factTextController.text),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: profileColorScheme.border),
+                                    borderRadius: BorderRadius.circular(16.0)),
+                                child: Text(
+                                  waterTextController,
+                                  style: TextStyle(
+                                      color: profileColorScheme.h1Text),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                 ],

@@ -172,8 +172,55 @@ class _HomePageState extends State<HomePage> {
                           return SizedBox(
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height * 0.7,
-                            child: LoadingAnimationWidget.hexagonDots(
+                            child: Stack(
+                              children: [
+                                const SizedBox(height: 0,),
+                                Positioned(
+                                  top: MediaQuery.of(context).size.height/2-75,
+                                  left: MediaQuery.of(context).size.width/2-37.5,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                                Positioned(
+                                  top: MediaQuery.of(context).size.height/2-56,
+                                  left: MediaQuery.of(context).size.width/2+37.5,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                                Positioned(
+                                  top: MediaQuery.of(context).size.height/2-37.5,
+                                  left: MediaQuery.of(context).size.width/2+75,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                                Positioned(
+                                  top: MediaQuery.of(context).size.height/2+56,
+                                  left: MediaQuery.of(context).size.width/2+37.5,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                                Center(
+                                  child: LoadingAnimationWidget.hexagonDots(
                                 color: homeColorScheme.h1TextColor, size: 75),
+                                ),
+                                Positioned(
+                                  bottom: MediaQuery.of(context).size.height/2+75,
+                                  left: MediaQuery.of(context).size.width/2-37.5,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                                Positioned(
+                                  bottom: MediaQuery.of(context).size.height/2+56,
+                                  left: MediaQuery.of(context).size.width/2-56,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                                Positioned(
+                                  bottom: MediaQuery.of(context).size.height/2-37.5,
+                                  left: MediaQuery.of(context).size.width/2-75,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                                Positioned(
+                                  bottom: MediaQuery.of(context).size.height/2-56,
+                                  left: MediaQuery.of(context).size.width/2-56,
+                                  child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),),
+                              ]
+                            )
                           );
                         },
                                 fit: BoxFit.fill,
