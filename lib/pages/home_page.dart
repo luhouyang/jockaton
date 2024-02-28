@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:macrohard/services/firestore_database.dart';
 import 'package:macrohard/services/user_usecase.dart';
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     if (userUsecase.userEntity.name == "name" &&
         userUsecase.userEntity.favouriteFood == "favourite food" &&
         userUsecase.userEntity.funFact == "fun fact") {
-      await userUsecase.setUser(await FirestoreDatabase()
+      userUsecase.setUser(await FirestoreDatabase()
           .getUser(FirebaseAuth.instance.currentUser!.uid));
       if (!mounted) return;
       setState(() {});
@@ -102,11 +103,17 @@ class _HomePageState extends State<HomePage> {
     UserUsecase userUsecase = Provider.of<UserUsecase>(context, listen: false);
 
     final List<String> imgList = [
-      'https://giphy.com/media/koUtwnvA3TY7C/200.gif',
-      'https://giphy.com/media/mCRJDo24UvJMA/200.gif',
-      'https://giphy.com/media/sIIhZliB2McAo/200.gif',
-      'https://giphy.com/media/{URL_PART}/200.gif',
-      'https://giphy.com/media/{URL_PART}/200.gif',
+      'https://i.giphy.com/media/koUtwnvA3TY7C/200.gif',
+      'https://i.giphy.com/media/mCRJDo24UvJMA/200.gif',
+      'https://i.giphy.com/media/sIIhZliB2McAo/200.gif',
+      'https://i.giphy.com/media/qwvOvda2TC5EY/200.gif',
+      'https://i.giphy.com/media/uHox9Jm5TyTPa/200.gif',
+      'https://i.giphy.com/media/hTh9bSbUPWMWk/200.gif',
+      'https://i.giphy.com/media/euGq9pgXoOVJcVhwRF/200.gif',
+      'https://i.giphy.com/media/JIX9t2j0ZTN9S/200.gif',
+      'https://i.giphy.com/media/111ebonMs90YLu/200.gif',
+      'https://i.giphy.com/media/8m4R4pvViWtRzbloJ1/200.gif',
+      'https://i.giphy.com/media/cF7QqO5DYdft6/200.gif',
     ];
 
     return Scaffold(
@@ -116,7 +123,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             const SizedBox(
-              height: 40,
+              height: 75,
             ),
             CircularPercentIndicator(
               radius: 120.0,
@@ -137,7 +144,7 @@ class _HomePageState extends State<HomePage> {
               progressColor: homeColorScheme.h1TextColor,
             ),
             const SizedBox(
-              height: 20,
+              height: 60,
             ),
             CarouselSlider(
               options: CarouselOptions(),
@@ -156,9 +163,21 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         child: Center(
-                            child: Image.network(item,
-                                fit: BoxFit.cover,
-                                color: homeColorScheme.button,
+                            child: Image.network(item, 
+                            loadingBuilder:
+                                    (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: LoadingAnimationWidget.hexagonDots(
+                                color: homeColorScheme.h1TextColor, size: 75),
+                          );
+                        },
+                                fit: BoxFit.fill,
+                                color: _isCrazyMode ? homeColorScheme.button : Colors.transparent,
                                 colorBlendMode: BlendMode.colorBurn,
                                 height:
                                     MediaQuery.of(context).size.height * 0.7)),
