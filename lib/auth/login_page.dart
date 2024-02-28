@@ -42,7 +42,8 @@ class _LoginPageState extends State<LoginPage> {
   void _startTimer() {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
-    _timer = Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
+    _timer =
+        Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
       debugPrint("crazy");
       if (!mounted) return;
       setState(() {
@@ -196,6 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                                         inEmailTextController.text,
                                         inPassTextController.text,
                                         userUsecase);
+                                    await Future.delayed(const Duration(seconds: 1));
                                     authUseCase.changeBool(false);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -270,6 +272,7 @@ class _LoginPageState extends State<LoginPage> {
                                         upEmailTextController.text,
                                         upPassTextController.text,
                                         userUsecase);
+                                    await Future.delayed(const Duration(seconds: 1));
                                     authUseCase.changeBool(false);
                                   },
                                   style: ElevatedButton.styleFrom(

@@ -142,7 +142,13 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Stack(
                 children: [
                   ClipOval(
-                    child: Image.asset("assets/profile_placeholder.jpg"),
+                    child: Image.asset(
+                      "assets/profile_placeholder.jpg",
+                      color: _isCrazyMode
+                          ? profileColorScheme.h1Text
+                          : Colors.transparent,
+                      colorBlendMode: BlendMode.colorBurn,
+                    ),
                   ),
                   Positioned(
                       right: 10,
@@ -252,12 +258,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Container(
+                                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 20, 10, 20),
+                                width: MediaQuery.of(context).size.width * 0.5,
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: profileColorScheme.border),
                                     borderRadius: BorderRadius.circular(16.0)),
                                 child: Text(
-                                  waterTextController,
+                                  waterTextController.text,
                                   style: TextStyle(
                                       color: profileColorScheme.h1Text),
                                 ),
