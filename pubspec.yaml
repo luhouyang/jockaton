@@ -18,6 +18,7 @@ dependencies:
   local_auth: ^2.1.8
   provider: ^6.1.1
   image_picker: ^1.0.7
+  image_cropper: ^5.0.1
   volume_controller: ^2.0.7
   torch_controller: ^2.0.1
   vibration: ^1.8.4
@@ -33,6 +34,8 @@ dependencies:
   carousel_slider: ^4.2.1
   confetti: ^0.7.0
   assets_audio_player: ^3.1.1
+  firebase_storage: ^11.6.7
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
@@ -47,7 +50,11 @@ flutter:
   assets:
     - assets/profile_placeholder.jpg
     - assets/areyousure.mp3
-  #   - images/a_dot_ham.jpeg
+    - assets/hellounderwater.mp3
+    - assets/bingchilling.mp3
+    - assets/dadog.mp3
+    - assets/emotionaldmg.mp3
+    - assets/fbi.mp3
 
   # fonts:
   #   - family: Schyler

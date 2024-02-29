@@ -20,8 +20,9 @@ class FirebaseAuthServices {
             favouriteFood: "BIG MEAT",
             funFact: "I CAN FLYYYYY",
             interval: 60,
-            water: 0);
-        await userUsecase.setUser(userEntity);
+            water: 0,
+            profilePic: "");
+        await userUsecase.setUser(userEntity, value.user!.uid);
         await FirestoreDatabase().setUser(userEntity, value.user!.uid);
       });
     } catch (e) {
@@ -41,7 +42,7 @@ class FirebaseAuthServices {
       )
           .then((value) async {
         await userUsecase
-            .setUser(await FirestoreDatabase().getUser(value.user!.uid));
+            .setUser(await FirestoreDatabase().getUser(value.user!.uid), value.user!.uid);
       });
     } catch (e) {
       // Handle authentication exceptions

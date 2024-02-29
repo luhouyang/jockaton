@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:macrohard/auth/firebase_auth_services.dart';
 import 'package:macrohard/entities/user_entity.dart';
+import 'package:macrohard/pages/edit_profile_image.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:macrohard/services/firestore_database.dart';
 import 'package:macrohard/services/user_usecase.dart';
+import 'package:macrohard/utilities/my_audio.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:provider/provider.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 // add color class
 class ProfileColorScheme {
@@ -74,8 +78,8 @@ class _ProfilePageState extends State<ProfilePage> {
     if (userUsecase.userEntity.name == "name" &&
         userUsecase.userEntity.favouriteFood == "favourite food" &&
         userUsecase.userEntity.funFact == "fun fact") {
-      await userUsecase.setUser(await FirestoreDatabase()
-          .getUser(FirebaseAuth.instance.currentUser!.uid));
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      await userUsecase.setUser(await FirestoreDatabase().getUser(uid), uid);
       nameTextController.text = userUsecase.userEntity.name;
       foodTextController.text = userUsecase.userEntity.favouriteFood;
       factTextController.text = userUsecase.userEntity.funFact;
@@ -90,6 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     _isCrazyMode = crazyRGBUsecase.isCrazyMode;
+    useOrientationSensor = crazyRGBUsecase.isCrazyMode;
     if (_isCrazyMode) {
       _startTimer();
     }
@@ -100,6 +105,8 @@ class _ProfilePageState extends State<ProfilePage> {
     foodTextController.text = userUsecase.userEntity.favouriteFood;
     factTextController.text = userUsecase.userEntity.funFact;
     waterTextController.text = userUsecase.userEntity.water.toString();
+
+    VolumeController().maxVolume();
     super.initState();
   }
 
@@ -120,11 +127,21 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_isCrazyMode != crazyRGBUsecase.isCrazyMode) {
       if (!_isCrazyMode) {
         _isCrazyMode = !_isCrazyMode;
+        useOrientationSensor = crazyRGBUsecase.isCrazyMode;
+        // max volume & play random audio
+        VolumeController().maxVolume();
+        AssetsAudioPlayer.newPlayer()
+            .open(Audio(MyAudio().getButtonPress()), autoStart: true);
         _startTimer();
       } else {
         _isCrazyMode = !_isCrazyMode;
+        useOrientationSensor = crazyRGBUsecase.isCrazyMode;
         _timer.cancel();
         profileColorScheme = ProfileColorScheme();
+        // max volume & play random audio
+        VolumeController().maxVolume();
+        AssetsAudioPlayer.newPlayer()
+            .open(Audio(MyAudio().getRandomAudio()), autoStart: true);
         setState(() {});
       }
     }
@@ -144,25 +161,35 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Stack(
                 children: [
                   ClipOval(
-                    child: Image.asset(
-                      "assets/profile_placeholder.jpg",
-                      color: _isCrazyMode
-                          ? profileColorScheme.h1Text
-                          : Colors.transparent,
-                      colorBlendMode: BlendMode.colorBurn,
-                    ),
-                  ),
+                      child: (userUsecase.userEntity.profileImage == null ||
+                              userUsecase.userEntity.profilePic == "")
+                          ? Image.asset(
+                              "assets/profile_placeholder.jpg",
+                              color: _isCrazyMode
+                                  ? profileColorScheme.h1Text
+                                  : Colors.transparent,
+                              colorBlendMode: BlendMode.colorBurn,
+                            )
+                          : Image.memory(userUsecase.userEntity.profileImage!)),
                   Positioned(
                       right: 10,
                       bottom: 10,
                       child: ClipOval(
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          color: profileColorScheme.button,
-                          child: Icon(
-                            color: profileColorScheme.h1Text,
-                            Icons.camera_enhance,
-                            size: 35,
+                        child: InkWell(
+                          onHover: (value) {},
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const EditProfileImage(),
+                            ));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            color: profileColorScheme.button,
+                            child: Icon(
+                              color: profileColorScheme.h1Text,
+                              Icons.camera_enhance,
+                              size: 35,
+                            ),
                           ),
                         ),
                       )),
@@ -210,6 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   funFact: factTextController.text,
                                   interval: userUsecase.userEntity.interval,
                                   water: userUsecase.userEntity.water,
+                                  profilePic: userUsecase.userEntity.profilePic,
                                 );
                                 FirestoreDatabase().setUser(newUserEntity, uid);
                               } else {
@@ -291,69 +319,67 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return SafeArea(
         child: Scaffold(
-      backgroundColor: crazyRGBUsecase.isCrazyMode
-          ? profileColorScheme.button
-          : Colors.white,
-      body: useOrientationSensor
-            ? NativeDeviceOrientedWidget(
-                landscape: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown
-                  ]);
-                  return profileScreen();
-                },
-                landscapeLeft: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeRight
-                  ]);
-                  return profileScreen();
-                },
-                landscapeRight: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeLeft
-                  ]);
-                  return profileScreen();
-                },
-                portrait: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeRight,
-                    DeviceOrientation.landscapeLeft
-                  ]);
-                  return profileScreen();
-                },
-                portraitUp: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitDown,
-                  ]);
-                  return profileScreen();
-                },
-                portraitDown: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                  ]);
-                  return profileScreen();
-                },
-                fallback: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeRight,
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                  ]);
-                  return profileScreen();
-                },
-                useSensor: useOrientationSensor,
-              )
-            : () {
-              SystemChrome.setPreferredOrientations([
-            DeviceOrientation.landscapeRight,
-            DeviceOrientation.landscapeLeft,
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.portraitDown,
-          ]);
-                return profileScreen();
-              }()));
+            backgroundColor: crazyRGBUsecase.isCrazyMode
+                ? profileColorScheme.button
+                : Colors.white,
+            body: useOrientationSensor
+                ? NativeDeviceOrientedWidget(
+                    landscape: (context) {
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.portraitUp,
+                        DeviceOrientation.portraitDown
+                      ]);
+                      return profileScreen();
+                    },
+                    landscapeLeft: (context) {
+                      SystemChrome.setPreferredOrientations(
+                          [DeviceOrientation.landscapeRight]);
+                      return profileScreen();
+                    },
+                    landscapeRight: (context) {
+                      SystemChrome.setPreferredOrientations(
+                          [DeviceOrientation.landscapeLeft]);
+                      return profileScreen();
+                    },
+                    portrait: (context) {
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.landscapeRight,
+                        DeviceOrientation.landscapeLeft
+                      ]);
+                      return profileScreen();
+                    },
+                    portraitUp: (context) {
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.portraitDown,
+                      ]);
+                      return profileScreen();
+                    },
+                    portraitDown: (context) {
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.portraitUp,
+                      ]);
+                      return profileScreen();
+                    },
+                    fallback: (context) {
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.landscapeRight,
+                        DeviceOrientation.landscapeLeft,
+                        DeviceOrientation.portraitUp,
+                        DeviceOrientation.portraitDown,
+                      ]);
+                      return profileScreen();
+                    },
+                    useSensor: useOrientationSensor,
+                  )
+                : () {
+                    SystemChrome.setPreferredOrientations([
+                      DeviceOrientation.landscapeRight,
+                      DeviceOrientation.landscapeLeft,
+                      DeviceOrientation.portraitUp,
+                      DeviceOrientation.portraitDown,
+                    ]);
+                    return profileScreen();
+                  }()));
   }
 
   String textVerify(value) {

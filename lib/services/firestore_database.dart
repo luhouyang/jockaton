@@ -30,7 +30,8 @@ class FirestoreDatabase {
           favouriteFood: "favourite food",
           funFact: "fun fact",
           interval: 60,
-          water: 0);
+          water: 0,
+          profilePic: "");
     }
   }
 }

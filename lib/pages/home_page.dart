@@ -9,6 +9,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:macrohard/services/firestore_database.dart';
 import 'package:macrohard/services/user_usecase.dart';
+import 'package:macrohard/utilities/my_audio.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -60,8 +61,8 @@ class _HomePageState extends State<HomePage> {
     if (userUsecase.userEntity.name == "name" &&
         userUsecase.userEntity.favouriteFood == "favourite food" &&
         userUsecase.userEntity.funFact == "fun fact") {
-      userUsecase.setUser(await FirestoreDatabase()
-          .getUser(FirebaseAuth.instance.currentUser!.uid));
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      userUsecase.setUser(await FirestoreDatabase().getUser(uid), uid);
       if (!mounted) return;
       setState(() {});
     }
@@ -104,10 +105,13 @@ class _HomePageState extends State<HomePage> {
         Provider.of<CrazyRGBUsecase>(context, listen: true);
     if (_isCrazyMode != crazyRGBUsecase.isCrazyMode) {
       if (!_isCrazyMode) {
+        // set crazy mode bools
         _isCrazyMode = !_isCrazyMode;
         useOrientationSensor = crazyRGBUsecase.isCrazyMode;
+        // max volume & play random audio
         VolumeController().maxVolume();
-        AssetsAudioPlayer.newPlayer().open(Audio("assets/areyousure.mp3"), autoStart: true);
+        AssetsAudioPlayer.newPlayer()
+            .open(Audio(MyAudio().getButtonPress()), autoStart: true);
         _startTimer();
       } else {
         _isCrazyMode = !_isCrazyMode;
@@ -115,13 +119,17 @@ class _HomePageState extends State<HomePage> {
         _timer.cancel();
         homeColorScheme = HomeColorScheme();
         VolumeController().maxVolume();
-        AssetsAudioPlayer.newPlayer().open(Audio("assets/areyousure.mp3"), autoStart: true);
+        AssetsAudioPlayer.newPlayer()
+            .open(Audio(MyAudio().getRandomAudio()), autoStart: true);
         setState(() {});
       }
     }
 
     UserUsecase userUsecase = Provider.of<UserUsecase>(context, listen: false);
 
+    // add new gif 'https://i.giphy.com/media/{url}/200.gif', -> url = cF7QqO5DYdft6
+    // example giphy link (https://giphy.com/gifs/reaction-l36kU80xPf0ojG0Erg) -> l36kU80xPf0ojG0Erg
+    //'https://i.giphy.com/media/l36kU80xPf0ojG0Erg/200.gif'
     final List<String> imgList = [
       'https://i.giphy.com/media/koUtwnvA3TY7C/200.gif',
       'https://i.giphy.com/media/mCRJDo24UvJMA/200.gif',
@@ -134,6 +142,11 @@ class _HomePageState extends State<HomePage> {
       'https://i.giphy.com/media/111ebonMs90YLu/200.gif',
       'https://i.giphy.com/media/8m4R4pvViWtRzbloJ1/200.gif',
       'https://i.giphy.com/media/cF7QqO5DYdft6/200.gif',
+      'https://i.giphy.com/media/l36kU80xPf0ojG0Erg/200.gif',
+      'https://i.giphy.com/media/xTiTnHvXHHxOTcdmxO/200.gif',
+      'https://i.giphy.com/media/KrLqtbe8PGEDe/200.gif',
+      'https://i.giphy.com/media/olAik8MhYOB9K/200.gif',
+      'https://i.giphy.com/media/O9BPkYr89lK2A/200.gif',
     ];
 
     Widget homeScreen() {

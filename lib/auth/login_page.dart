@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:confetti/confetti.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
@@ -8,7 +9,9 @@ import 'package:macrohard/auth/auth_usecase.dart';
 import 'package:macrohard/auth/firebase_auth_services.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:macrohard/services/user_usecase.dart';
+import 'package:macrohard/utilities/my_audio.dart';
 import 'package:provider/provider.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 // add color class
 class LoginColorScheme {
@@ -76,10 +79,18 @@ class _LoginPageState extends State<LoginPage> {
     if (!crazyRGBUsecase.isCrazyMode) {
       crazyRGBUsecase.changeCrazy();
       _isCrazyMode = crazyRGBUsecase.isCrazyMode;
+      // max volume & play random audio
+        VolumeController().maxVolume();
+        AssetsAudioPlayer.newPlayer()
+            .open(Audio(MyAudio().getButtonPress()), autoStart: true);
       _startTimer();
     } else {
       crazyRGBUsecase.changeCrazy();
       _isCrazyMode = crazyRGBUsecase.isCrazyMode;
+      // max volume & play random audio
+        VolumeController().maxVolume();
+        AssetsAudioPlayer.newPlayer()
+            .open(Audio(MyAudio().getButtonPress()), autoStart: true);
       _timer.cancel();
       loginColorScheme = LoginColorScheme();
       if (!mounted) return;
