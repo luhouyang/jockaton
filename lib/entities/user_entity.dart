@@ -4,9 +4,9 @@ class UserEntity {
   final String name;
   final String favouriteFood;
   final String funFact;
-  final int interval;
+  final double interval;
   String profilePic;
-  int water;
+  double water;
   Uint8List? profileImage;
 
   UserEntity(
@@ -23,8 +23,8 @@ class UserEntity {
       name: map['name'],
       favouriteFood: map['favouriteFood'],
       funFact: map['funFact'],
-      interval: map['interval'],
-      water: map['water'],
+      interval: double.tryParse(map['interval'].toString())!,
+      water: double.tryParse(map['water'].toString())!,
       profilePic: map['profilePic'],
       profileImage: null,
     );

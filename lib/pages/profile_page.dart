@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   var nameTextController = TextEditingController();
   var foodTextController = TextEditingController();
   var factTextController = TextEditingController();
-  var waterTextController = TextEditingController();
+  var intervalTextController = TextEditingController();
   double _currentSliderValue = 20.0;
 
   bool _isEditing = false;
@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
       nameTextController.text = userUsecase.userEntity.name;
       foodTextController.text = userUsecase.userEntity.favouriteFood;
       factTextController.text = userUsecase.userEntity.funFact;
-      waterTextController.text = userUsecase.userEntity.water.toString();
+      intervalTextController.text = userUsecase.userEntity.water.toString();
       if (!mounted) return;
       setState(() {});
     }
@@ -103,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
     nameTextController.text = userUsecase.userEntity.name;
     foodTextController.text = userUsecase.userEntity.favouriteFood;
     factTextController.text = userUsecase.userEntity.funFact;
-    waterTextController.text = userUsecase.userEntity.water.toString();
+    intervalTextController.text = userUsecase.userEntity.water.toString();
     super.initState();
   }
 
@@ -232,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   name: nameTextController.text,
                                   favouriteFood: foodTextController.text,
                                   funFact: factTextController.text,
-                                  interval: userUsecase.userEntity.interval,
+                                  interval: double.tryParse(intervalTextController.text)!,
                                   water: userUsecase.userEntity.water,
                                   profilePic: userUsecase.userEntity.profilePic,
                                 );
@@ -288,7 +288,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 label: _currentSliderValue.round().toString(),
                                 onChanged: (double value) {
                                   setState(() {
-                                    waterTextController.text =
+                                    intervalTextController.text =
                                         _currentSliderValue.toString();
                                     _currentSliderValue = value;
                                   });
@@ -445,7 +445,7 @@ class _ProfilePageState extends State<ProfilePage> {
             border: Border.all(color: profileColorScheme.border),
             borderRadius: BorderRadius.circular(16.0)),
         child: Text(
-          waterTextController.text,
+          intervalTextController.text,
           style: TextStyle(color: profileColorScheme.h1Text),
         ),
       ),

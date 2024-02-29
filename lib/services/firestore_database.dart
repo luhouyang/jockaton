@@ -29,8 +29,8 @@ class FirestoreDatabase {
           name: "name",
           favouriteFood: "favourite food",
           funFact: "fun fact",
-          interval: 60,
-          water: 0,
+          interval: 60.0,
+          water: 0.0,
           profilePic: "");
     }
   }

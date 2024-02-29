@@ -9,8 +9,8 @@ class UserUsecase extends ChangeNotifier {
       name: "name",
       favouriteFood: "favourite food",
       funFact: "fun fact",
-      interval: 60,
-      water: 0,
+      interval: 60.0,
+      water: 0.0,
       profilePic: "");
 
   Future<void> setUser(UserEntity newUserEntity, String uid) async {
