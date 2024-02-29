@@ -31,6 +31,7 @@ dependencies:
   hive: ^2.2.3
   cloud_firestore: ^4.15.5
   carousel_slider: ^4.2.1
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:
