@@ -51,7 +51,6 @@ class _ProfilePageState extends State<ProfilePage> {
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     _timer =
         Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
-      debugPrint("crazy");
       if (!mounted) return;
       setState(() {
         // add every colour case
@@ -105,8 +104,6 @@ class _ProfilePageState extends State<ProfilePage> {
     foodTextController.text = userUsecase.userEntity.favouriteFood;
     factTextController.text = userUsecase.userEntity.funFact;
     waterTextController.text = userUsecase.userEntity.water.toString();
-
-    VolumeController().maxVolume();
     super.initState();
   }
 

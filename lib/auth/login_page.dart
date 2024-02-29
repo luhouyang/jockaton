@@ -51,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     _timer =
         Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
-      debugPrint("crazy");
       if (!mounted) return;
       setState(() {
         // add every colour case

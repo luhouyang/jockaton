@@ -101,7 +101,6 @@ class _EditProfileImageState extends State<EditProfileImage> {
 
   // ui component for pick image button
   Widget _pickImageContainer() {
-    UserUsecase userUsecase = Provider.of<UserUsecase>(context, listen: false);
     return profilePicBytes == null
         ? Center(
             child: Padding(

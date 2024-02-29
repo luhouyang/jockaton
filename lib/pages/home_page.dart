@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> {
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     _timer =
         Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
-      debugPrint("crazy");
       if (!mounted) return;
       setState(() {
         // add every colour case
@@ -85,7 +84,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     getUserData();
-    VolumeController().maxVolume();
     super.initState();
   }
 
