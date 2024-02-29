@@ -248,6 +248,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 foodTextController),
                             inputTextWidget(
                                 "fun fact", textVerify, factTextController),
+                                waterTimerWidget(),
                           ],
                         )
                       : Column(
@@ -255,24 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             displayTextWidget(nameTextController.text),
                             displayTextWidget(foodTextController.text),
                             displayTextWidget(factTextController.text),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Container(
-                                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 20, 10, 20),
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: profileColorScheme.border),
-                                    borderRadius: BorderRadius.circular(16.0)),
-                                child: Text(
-                                  waterTextController.text,
-                                  style: TextStyle(
-                                      color: profileColorScheme.h1Text),
-                                ),
-                              ),
-                            ),
+                            waterTimerWidget(),
                           ],
                         ),
                 ],
@@ -317,19 +301,39 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget displayTextWidget(String text) {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-          padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              color: _isCrazyMode ? profileColorScheme.textFeild : Colors.white,
-              border: Border.all(color: profileColorScheme.border),
-              borderRadius: BorderRadius.circular(16.0)),
-          child: Text(
-            text,
-            style: TextStyle(color: profileColorScheme.h1Text),
-          ),
-        ));
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: _isCrazyMode ? profileColorScheme.textFeild : Colors.white,
+            border: Border.all(color: profileColorScheme.border),
+            borderRadius: BorderRadius.circular(16.0)),
+        child: Text(
+          text,
+          style: TextStyle(color: profileColorScheme.h1Text),
+        ),
+      ),
+    );
+  }
+
+  Widget waterTimerWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+        padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+        width: MediaQuery.of(context).size.width * 0.5,
+        decoration: BoxDecoration(
+          color: _isEditing ? profileColorScheme.textFeild : _isCrazyMode ? profileColorScheme.textFeild : Colors.white,
+            border: Border.all(color: profileColorScheme.border),
+            borderRadius: BorderRadius.circular(16.0)),
+        child: Text(
+          waterTextController.text,
+          style: TextStyle(color: profileColorScheme.h1Text),
+        ),
+      ),
+    );
   }
 }
