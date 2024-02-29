@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:macrohard/auth/firebase_auth_services.dart';
 import 'package:macrohard/entities/user_entity.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
 import 'package:macrohard/services/firestore_database.dart';
 import 'package:macrohard/services/user_usecase.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:provider/provider.dart';
 
 // add color class
@@ -32,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   var foodTextController = TextEditingController();
   var factTextController = TextEditingController();
   var waterTextController = TextEditingController();
+  double _currentSliderValue = 20.0;
 
   bool _isEditing = false;
 
@@ -107,6 +110,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   // color code ends here
 
+  // orientation code
+  bool useOrientationSensor = false;
+
   @override
   Widget build(BuildContext context) {
     CrazyRGBUsecase crazyRGBUsecase =
@@ -125,12 +131,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
     UserUsecase userUsecase = Provider.of<UserUsecase>(context, listen: false);
 
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: crazyRGBUsecase.isCrazyMode
-          ? profileColorScheme.button
-          : Colors.white,
-      body: SingleChildScrollView(
+    Widget profileScreen() {
+      return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
@@ -182,10 +184,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             await FirebaseAuthServices().logout();
                           },
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
-                                  _isEditing
-                                      ? profileColorScheme.textFeild
-                                      : profileColorScheme.button)),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(_isEditing
+                                      ? Colors.blue[100]
+                                      : _isCrazyMode
+                                          ? profileColorScheme.textFeild
+                                          : profileColorScheme.button)),
                           child: Text(
                             "LOGOUT",
                             style:
@@ -226,10 +230,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             });
                           },
                           style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
-                                  _isEditing
-                                      ? profileColorScheme.textFeild
-                                      : profileColorScheme.button)),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(_isEditing
+                                      ? Colors.blue[100]
+                                      : _isCrazyMode
+                                          ? profileColorScheme.textFeild
+                                          : profileColorScheme.button)),
                           child: Text(
                             _isEditing ? "Save" : "Edit",
                             style:
@@ -248,7 +254,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                 foodTextController),
                             inputTextWidget(
                                 "fun fact", textVerify, factTextController),
-                                waterTimerWidget(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                              child: Slider(
+                                value: _currentSliderValue,
+                                max: 60,
+                                divisions: 5,
+                                label: _currentSliderValue.round().toString(),
+                                onChanged: (double value) {
+                                  setState(() {
+                                    waterTextController.text =
+                                        _currentSliderValue.toString();
+                                    _currentSliderValue = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            waterTimerWidget(),
                           ],
                         )
                       : Column(
@@ -264,8 +286,74 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
-      ),
-    ));
+      );
+    }
+
+    return SafeArea(
+        child: Scaffold(
+      backgroundColor: crazyRGBUsecase.isCrazyMode
+          ? profileColorScheme.button
+          : Colors.white,
+      body: useOrientationSensor
+            ? NativeDeviceOrientedWidget(
+                landscape: (context) {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.portraitDown
+                  ]);
+                  return profileScreen();
+                },
+                landscapeLeft: (context) {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeRight
+                  ]);
+                  return profileScreen();
+                },
+                landscapeRight: (context) {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeLeft
+                  ]);
+                  return profileScreen();
+                },
+                portrait: (context) {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeRight,
+                    DeviceOrientation.landscapeLeft
+                  ]);
+                  return profileScreen();
+                },
+                portraitUp: (context) {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitDown,
+                  ]);
+                  return profileScreen();
+                },
+                portraitDown: (context) {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                  ]);
+                  return profileScreen();
+                },
+                fallback: (context) {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeRight,
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.portraitDown,
+                  ]);
+                  return profileScreen();
+                },
+                useSensor: useOrientationSensor,
+              )
+            : () {
+              SystemChrome.setPreferredOrientations([
+            DeviceOrientation.landscapeRight,
+            DeviceOrientation.landscapeLeft,
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+          ]);
+                return profileScreen();
+              }()));
   }
 
   String textVerify(value) {
@@ -326,7 +414,11 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         width: MediaQuery.of(context).size.width * 0.5,
         decoration: BoxDecoration(
-          color: _isEditing ? profileColorScheme.textFeild : _isCrazyMode ? profileColorScheme.textFeild : Colors.white,
+            color: _isEditing
+                ? Colors.blue[100]
+                : _isCrazyMode
+                    ? profileColorScheme.textFeild
+                    : Colors.white,
             border: Border.all(color: profileColorScheme.border),
             borderRadius: BorderRadius.circular(16.0)),
         child: Text(
