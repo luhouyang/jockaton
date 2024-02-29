@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:confetti/confetti.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,9 @@ class _LoginPageState extends State<LoginPage> {
   var upPassTextController = TextEditingController();
 
   bool _isSignIn = true;
+
+  final _confetticontroller = ConfettiController();
+  bool _confetPlay = false;
 
   // copy paste this for color
   bool _isCrazyMode = false;
@@ -98,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     if (_isCrazyMode) _timer.cancel();
     super.dispose();
+    _confetticontroller.dispose();
   }
   // color code ends here
 
@@ -112,6 +117,7 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
             Container(
               margin: const EdgeInsets.fromLTRB(25, 150, 25, 150),
@@ -197,7 +203,8 @@ class _LoginPageState extends State<LoginPage> {
                                         inEmailTextController.text,
                                         inPassTextController.text,
                                         userUsecase);
-                                    await Future.delayed(const Duration(seconds: 1));
+                                    await Future.delayed(
+                                        const Duration(seconds: 1));
                                     authUseCase.changeBool(false);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -272,7 +279,8 @@ class _LoginPageState extends State<LoginPage> {
                                         upEmailTextController.text,
                                         upPassTextController.text,
                                         userUsecase);
-                                    await Future.delayed(const Duration(seconds: 1));
+                                    await Future.delayed(
+                                        const Duration(seconds: 1));
                                     authUseCase.changeBool(false);
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -322,13 +330,27 @@ class _LoginPageState extends State<LoginPage> {
               right: 10,
               child: IconButton(
                 iconSize: 45,
-                onPressed: () => crazyButton(),
+                onPressed: () {
+                  crazyButton();
+                  if (_confetPlay) {
+                    _confetticontroller.stop();
+                  } else {
+                    _confetticontroller.play();
+                  }
+                  _confetPlay = !_confetPlay;
+                },
                 icon: Icon(
                   Icons.warning_amber_rounded,
                   color: loginColorScheme.h1Text,
                 ),
               ),
             ),
+            ConfettiWidget(
+              confettiController: _confetticontroller,
+              emissionFrequency: 0.9,
+              blastDirection: pi / 2,
+              numberOfParticles: 10,
+            )
           ],
         ),
       ),
