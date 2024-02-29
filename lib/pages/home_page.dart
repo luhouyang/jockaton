@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
 
     Widget homeScreen() {
       return SingleChildScrollView(
-        physics: useOrientationSensor ? ScrollPhysics() : NeverScrollableScrollPhysics(),
+        physics: useOrientationSensor ? const ScrollPhysics() : const NeverScrollableScrollPhysics(),
         child: Center(
           child: Column(
             children: <Widget>[
