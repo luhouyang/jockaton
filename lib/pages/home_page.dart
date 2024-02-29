@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:macrohard/services/user_usecase.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:volume_controller/volume_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     getUserData();
-
+    VolumeController().maxVolume();
     super.initState();
   }
 
@@ -104,12 +106,16 @@ class _HomePageState extends State<HomePage> {
       if (!_isCrazyMode) {
         _isCrazyMode = !_isCrazyMode;
         useOrientationSensor = crazyRGBUsecase.isCrazyMode;
+        VolumeController().maxVolume();
+        AssetsAudioPlayer.newPlayer().open(Audio("assets/areyousure.mp3"), autoStart: true);
         _startTimer();
       } else {
         _isCrazyMode = !_isCrazyMode;
         useOrientationSensor = crazyRGBUsecase.isCrazyMode;
         _timer.cancel();
         homeColorScheme = HomeColorScheme();
+        VolumeController().maxVolume();
+        AssetsAudioPlayer.newPlayer().open(Audio("assets/areyousure.mp3"), autoStart: true);
         setState(() {});
       }
     }
@@ -132,7 +138,9 @@ class _HomePageState extends State<HomePage> {
 
     Widget homeScreen() {
       return SingleChildScrollView(
-        physics: useOrientationSensor ? const ScrollPhysics() : const NeverScrollableScrollPhysics(),
+        physics: useOrientationSensor
+            ? const ScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         child: Center(
           child: Column(
             children: <Widget>[
@@ -196,65 +204,70 @@ class _HomePageState extends State<HomePage> {
                                         color: homeColorScheme.h1TextColor,
                                         size: 75),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget.hexagonDots(
                                           color: homeColorScheme.h1TextColor,
                                           size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget.beat(
                                           color: homeColorScheme.h1TextColor,
                                           size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
-                                      child: LoadingAnimationWidget.bouncingBall(
-                                          color: homeColorScheme.h1TextColor,
-                                          size: 75),
-                                    ),
-                                    Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child:
-                                          LoadingAnimationWidget.discreteCircle(
-                                              color: homeColorScheme.h1TextColor,
+                                          LoadingAnimationWidget.bouncingBall(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
-                                      child: LoadingAnimationWidget.dotsTriangle(
-                                          color: homeColorScheme.h1TextColor,
-                                          size: 75),
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
+                                      child:
+                                          LoadingAnimationWidget.discreteCircle(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
+                                              size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
+                                      child:
+                                          LoadingAnimationWidget.dotsTriangle(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
+                                              size: 75),
+                                    ),
+                                    Positioned(
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget.fallingDot(
                                           color: homeColorScheme.h1TextColor,
                                           size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget.flickr(
                                           rightDotColor: homeColorScheme.button,
                                           leftDotColor:
@@ -262,127 +275,140 @@ class _HomePageState extends State<HomePage> {
                                           size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
-                                      child:
-                                          LoadingAnimationWidget.fourRotatingDots(
-                                              color: homeColorScheme.h1TextColor,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
+                                      child: LoadingAnimationWidget
+                                          .fourRotatingDots(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
-                                      child:
-                                          LoadingAnimationWidget.halfTriangleDot(
-                                              color: homeColorScheme.h1TextColor,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
+                                      child: LoadingAnimationWidget
+                                          .halfTriangleDot(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget.hexagonDots(
                                           color: homeColorScheme.h1TextColor,
                                           size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget
                                           .horizontalRotatingDots(
-                                              color: homeColorScheme.h1TextColor,
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget.inkDrop(
                                           color: homeColorScheme.h1TextColor,
                                           size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
-                                      child: LoadingAnimationWidget.newtonCradle(
-                                          color: homeColorScheme.h1TextColor,
-                                          size: 75),
-                                    ),
-                                    Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child:
-                                          LoadingAnimationWidget.prograssiveDots(
-                                              color: homeColorScheme.h1TextColor,
+                                          LoadingAnimationWidget.newtonCradle(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
-                                      child: LoadingAnimationWidget.stretchedDots(
-                                          color: homeColorScheme.h1TextColor,
-                                          size: 75),
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
+                                      child: LoadingAnimationWidget
+                                          .prograssiveDots(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
+                                              size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
+                                      child:
+                                          LoadingAnimationWidget.stretchedDots(
+                                              color:
+                                                  homeColorScheme.h1TextColor,
+                                              size: 75),
+                                    ),
+                                    Positioned(
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget
                                           .threeArchedCircle(
-                                              color: homeColorScheme.h1TextColor,
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget
                                           .threeRotatingDots(
-                                              color: homeColorScheme.h1TextColor,
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
-                                      child: LoadingAnimationWidget.twistingDots(
-                                          rightDotColor: homeColorScheme.button,
-                                          leftDotColor:
-                                              homeColorScheme.h1TextColor,
-                                          size: 75),
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
+                                      child:
+                                          LoadingAnimationWidget.twistingDots(
+                                              rightDotColor:
+                                                  homeColorScheme.button,
+                                              leftDotColor:
+                                                  homeColorScheme.h1TextColor,
+                                              size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child:
                                           LoadingAnimationWidget.twoRotatingArc(
-                                              color: homeColorScheme.h1TextColor,
+                                              color:
+                                                  homeColorScheme.h1TextColor,
                                               size: 75),
                                     ),
                                     Positioned(
-                                      top:
-                                          Random().nextDouble() * maxHeight - dis,
-                                      left:
-                                          Random().nextDouble() * maxWidth - dis,
+                                      top: Random().nextDouble() * maxHeight -
+                                          dis,
+                                      left: Random().nextDouble() * maxWidth -
+                                          dis,
                                       child: LoadingAnimationWidget.waveDots(
                                           color: homeColorScheme.h1TextColor,
                                           size: 75),
@@ -394,8 +420,8 @@ class _HomePageState extends State<HomePage> {
                                         ? homeColorScheme.button
                                         : Colors.transparent,
                                     colorBlendMode: BlendMode.colorBurn,
-                                    height:
-                                        MediaQuery.of(context).size.height * 0.7))
+                                    height: MediaQuery.of(context).size.height *
+                                        0.7))
                           ],
                         )))
                     .toList(),
@@ -419,15 +445,13 @@ class _HomePageState extends State<HomePage> {
                   return homeScreen();
                 },
                 landscapeLeft: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeRight
-                  ]);
+                  SystemChrome.setPreferredOrientations(
+                      [DeviceOrientation.landscapeRight]);
                   return homeScreen();
                 },
                 landscapeRight: (context) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeLeft
-                  ]);
+                  SystemChrome.setPreferredOrientations(
+                      [DeviceOrientation.landscapeLeft]);
                   return homeScreen();
                 },
                 portrait: (context) {
@@ -461,12 +485,12 @@ class _HomePageState extends State<HomePage> {
                 useSensor: useOrientationSensor,
               )
             : () {
-              SystemChrome.setPreferredOrientations([
-            DeviceOrientation.landscapeRight,
-            DeviceOrientation.landscapeLeft,
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.portraitDown,
-          ]);
+                SystemChrome.setPreferredOrientations([
+                  DeviceOrientation.landscapeRight,
+                  DeviceOrientation.landscapeLeft,
+                  DeviceOrientation.portraitUp,
+                  DeviceOrientation.portraitDown,
+                ]);
                 return homeScreen();
               }());
   }
