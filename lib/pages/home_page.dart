@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: <Widget>[
               const SizedBox(
-                height: 75,
+                height: 60,
               ),
               CircularPercentIndicator(
                 radius: 120.0,
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                 progressColor: homeColorScheme.h1TextColor,
               ),
               const SizedBox(
-                height: 60,
+                height: 50,
               ),
               CarouselSlider(
                 options: CarouselOptions(),

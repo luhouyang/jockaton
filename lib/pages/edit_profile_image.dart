@@ -14,6 +14,30 @@ import 'package:macrohard/services/image_services.dart';
 import 'package:macrohard/services/user_usecase.dart';
 import 'package:provider/provider.dart';
 
+// web
+/*
+COMMENT OUT WHEN COMPILING FOR MOBILE
+
+after "flutter build web" -> add "app.js" at ..\build\web\flutter_service_worker.js
+LINE 40~
+const CORE = ["app.js", "main.dart.js",
+"index.html",
+"assets/AssetManifest.json",
+"assets/FontManifest.json"];
+*/
+
+/*
+UNCOMMENT HERE TO BUILD FOR WEB
+UNCOMMENT LINE 360, 406
+
+import 'dart:js' as js;
+import 'dart:html' as html;
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:file_picker/_internal/file_picker_web.dart';
+import 'package:file_picker/file_picker.dart';
+*/
+
 // add color class
 class ProfileColorScheme {
   Color h1Text = Colors.blue[900]!;
@@ -333,33 +357,138 @@ class _EditProfileImageState extends State<EditProfileImage> {
   // orientation code
   bool useOrientationSensor = false;
 
+  // web image picker
+  /*
+  String defaultImageUrl =
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT-uamOCwtEATju3lIp_LhwO_53fDgzjVaLCGDCmkldq57V9ipqCgPJ-T7vxGFF5mYEZs&usqp=CAU';
+  String selectedFile = '';
+  XFile? webFile;
+  Uint8List? webImageBytes;
+  _selectFile(bool imageFrom) async {
+    FilePickerResult? fileResult = await FilePickerWeb.platform.pickFiles();
+
+    if (fileResult != null) {
+      setState(() {
+        selectedFile = fileResult.files.first.name;
+        webImageBytes = fileResult.files.first.bytes;
+      });
+    }
+    debugPrint(selectedFile);
+  }
+  */
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-            ? FutureBuilder<void>(
-                future: retrieveLostData(),
-                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                      return _pickImageContainer();
-                    case ConnectionState.done:
-                      return _previewImages();
-                    case ConnectionState.active:
-                      if (snapshot.hasError) {
+          body: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+              ? FutureBuilder<void>(
+                  future: retrieveLostData(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                      case ConnectionState.waiting:
                         return _pickImageContainer();
-                      } else {
+                      case ConnectionState.done:
+                        return _previewImages();
+                      case ConnectionState.active:
+                        if (snapshot.hasError) {
+                          return _pickImageContainer();
+                        } else {
+                          return _pickImageContainer();
+                        }
+                      default:
                         return _pickImageContainer();
-                      }
-                    default:
-                      return _pickImageContainer();
-                  }
-                },
-              )
-            : _previewImages(),
-      ),
+                    }
+                  },
+                )
+              : _previewImages()
+              /*
+              Column(
+                  children: [
+                    Container(
+                        height: 400,
+                        width: 400,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            15,
+                          ),
+                        ),
+                        child: selectedFile.isEmpty
+                            ? Image.network(
+                                defaultImageUrl,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.memory(webImageBytes!)),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 15, 30, 20),
+                      child: SizedBox(
+                        height: 50,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            _selectFile(true);
+                          },
+                          icon: const Icon(
+                            Icons.camera,
+                          ),
+                          label: const Text(
+                            'Pick Image',
+                            style: TextStyle(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (webImageBytes != null)
+                      OutlinedButton(
+                          child: const Text("SAVE IMAGE"),
+                          onPressed: () async {
+                            UserUsecase userUsecase = Provider.of<UserUsecase>(
+                                context,
+                                listen: false);
+                            String uid = FirebaseAuth.instance.currentUser!.uid;
+                            UserEntity newUserEntity = UserEntity(
+                              name: userUsecase.userEntity.name,
+                              favouriteFood:
+                                  userUsecase.userEntity.favouriteFood,
+                              funFact: userUsecase.userEntity.funFact,
+                              interval: userUsecase.userEntity.interval,
+                              water: userUsecase.userEntity.water,
+                              profilePic: "image",
+                            );
+                            userUsecase.userEntity.profileImage =
+                                webImageBytes!;
+                            await FirestoreDatabase()
+                                .setUser(newUserEntity, uid);
+                            // image compression with js
+                            String base64dataBody =
+                                base64Encode(webImageBytes!.toList());
+                            String header = "data:image/png;base64,";
+                            var base64data = header + base64dataBody;
+
+                            // call compressAndDownloadImage with base64 image you want to compress
+                            js.context.callMethod(
+                                'compressAndDownloadImage', [base64data]);
+
+                            // listen to js
+                            html.window.addEventListener("message",
+                                (event) async {
+                              Uint8List finalImageData =
+                                  ((event as html.MessageEvent).data
+                                          as ByteBuffer)
+                                      .asUint8List();
+                              debugPrint(finalImageData.toString());
+
+                              // use this to create product entity
+                              await ImageServices()
+                                  .addWebImage(uid, newUserEntity.profilePic,
+                                      finalImageData)
+                                  .then((value) => Navigator.pop(context));
+                            });
+                          }),
+                  ],
+                )*/
+                ),
     );
   }
 }

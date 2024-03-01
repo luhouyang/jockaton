@@ -34,4 +34,15 @@ class ImageServices {
     }
     return null;
   }
+
+  // web
+  Future addWebImage(String docRef, String fileName, Uint8List? imageData) async {
+    final imageRef = storageRef.child(docRef).child(fileName);
+
+    try {
+      await imageRef.putData(imageData!);
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }
