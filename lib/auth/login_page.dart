@@ -79,21 +79,23 @@ class _LoginPageState extends State<LoginPage> {
       crazyRGBUsecase.changeCrazy();
       _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       // max volume & play random audio
-        VolumeController().maxVolume();
-        AssetsAudioPlayer.newPlayer()
-            .open(Audio(MyAudio().getButtonPress()), autoStart: true);
+      VolumeController().maxVolume();
+      AssetsAudioPlayer.newPlayer()
+          .open(Audio(MyAudio().getButtonPress()), autoStart: true);
+      _confetticontroller.stop();
       _startTimer();
     } else {
       crazyRGBUsecase.changeCrazy();
       _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       // max volume & play random audio
-        VolumeController().maxVolume();
-        AssetsAudioPlayer.newPlayer()
-            .open(Audio(MyAudio().getButtonPress()), autoStart: true);
+      VolumeController().maxVolume();
+      AssetsAudioPlayer.newPlayer()
+          .open(Audio(MyAudio().getButtonPress()), autoStart: true);
       _timer.cancel();
       loginColorScheme = LoginColorScheme();
       if (!mounted) return;
       setState(() {});
+      _confetticontroller.play();
     }
   }
 
@@ -127,7 +129,6 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Stack(
-          alignment: Alignment.topCenter,
           children: [
             Container(
               margin: const EdgeInsets.fromLTRB(25, 150, 25, 150),
@@ -342,12 +343,6 @@ class _LoginPageState extends State<LoginPage> {
                 iconSize: 45,
                 onPressed: () {
                   crazyButton();
-                  if (_confetPlay) {
-                    _confetticontroller.stop();
-                  } else {
-                    _confetticontroller.play();
-                  }
-                  _confetPlay = !_confetPlay;
                 },
                 icon: Icon(
                   Icons.warning_amber_rounded,
@@ -355,11 +350,68 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            ConfettiWidget(
-              confettiController: _confetticontroller,
-              emissionFrequency: 0.9,
-              blastDirection: pi / 2,
-              numberOfParticles: 10,
+            Positioned(
+              top: 2,
+              left: 2,
+              child: ConfettiWidget(
+                confettiController: _confetticontroller,
+                numberOfParticles: 10,
+                emissionFrequency: 1,
+                blastDirectionality: BlastDirectionality.directional,
+                blastDirection: -(7 * pi) / 4,
+                gravity: 0.3,
+                particleDrag: 0.01,
+              ),
+            ),
+            Positioned(
+              top: 2,
+              right: 2,
+              child: ConfettiWidget(
+                confettiController: _confetticontroller,
+                numberOfParticles: 10,
+                emissionFrequency: 1,
+                blastDirectionality: BlastDirectionality.directional,
+                blastDirection: (5 * pi) / 6,
+                gravity: 0.3,
+                particleDrag: 0.01,
+              ),
+            ),
+            Positioned(
+              bottom: 2,
+              left: 2,
+              child: ConfettiWidget(
+                confettiController: _confetticontroller,
+                numberOfParticles: 10,
+                emissionFrequency: 1,
+                blastDirectionality: BlastDirectionality.directional,
+                blastDirection: -pi / 3,
+                gravity: 0.3,
+                particleDrag: 0.01,
+              ),
+            ),
+            Positioned(
+              bottom: 2,
+              right: 1,
+              child: ConfettiWidget(
+                confettiController: _confetticontroller,
+                numberOfParticles: 10,
+                emissionFrequency: 1,
+                blastDirectionality: BlastDirectionality.directional,
+                blastDirection: -(2 * pi) / 3,
+                gravity: 0.3,
+                particleDrag: 0.01,
+              ),
+            ),
+            Positioned(
+              bottom: 500,
+              right: 170,
+              child: ConfettiWidget(
+                confettiController: _confetticontroller,
+                numberOfParticles: 10,
+                emissionFrequency: 1,
+                blastDirectionality: BlastDirectionality.explosive,
+                particleDrag: 0.01,
+              ),
             )
           ],
         ),
