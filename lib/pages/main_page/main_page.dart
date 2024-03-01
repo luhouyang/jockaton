@@ -44,8 +44,8 @@ class _MainPageState extends State<MainPage> {
   int _brightnessIndex = 1;
   Future<void> setBrightness() async {
     try {
-      await ScreenBrightness.instance
-          .setScreenBrightness((_brightnessIndex % 2 == 0) ? 0.5 : Random().nextDouble());
+      await ScreenBrightness.instance.setScreenBrightness(
+          (_brightnessIndex % 2 == 0) ? 0.5 : Random().nextDouble());
     } catch (e) {
       debugPrint(e.toString());
       throw 'Failed to set brightness';
@@ -62,24 +62,27 @@ class _MainPageState extends State<MainPage> {
   }
 
   // extream crazy mode
+  bool _isExtreme = false;
   Future<void> exCrazyButton() async {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
-    if (!crazyRGBUsecase.isCrazyMode) {
+    if (!_isExtreme) {
+      crazyRGBUsecase.changeExtremeCrazy();
       crazyRGBUsecase.changeCrazy();
+      _isExtreme = !_isExtreme;
       _isTorch = !_isTorch;
       _isPlaySounds = !_isPlaySounds;
       _isVibration = !_isVibration;
       _isBrightness = !_isBrightness;
-      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _startTimer();
     } else {
+      crazyRGBUsecase.changeExtremeCrazy();
       crazyRGBUsecase.changeCrazy();
+      _isExtreme = !_isExtreme;
       _isTorch = !_isTorch;
       _isPlaySounds = !_isPlaySounds;
       _isVibration = !_isVibration;
       _isBrightness = !_isBrightness;
-      _isCrazyMode = crazyRGBUsecase.isCrazyMode;
       _timer.cancel();
       Vibration.cancel();
       resetBrightness();
@@ -127,7 +130,8 @@ class _MainPageState extends State<MainPage> {
         }
         if (_isPlaySounds) {
           VolumeController().maxVolume();
-          AssetsAudioPlayer.newPlayer().open(Audio(MyAudio().getButtonPress()), autoStart: true);
+          AssetsAudioPlayer.newPlayer()
+              .open(Audio(MyAudio().getButtonPress()), autoStart: true);
         }
         if (_isVibration) {
           Vibration.vibrate();
@@ -165,14 +169,14 @@ class _MainPageState extends State<MainPage> {
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     _isCrazyMode = crazyRGBUsecase.isCrazyMode;
     if (_isCrazyMode) {
-      _startTimer();
-    }
+        _startTimer();
+      }
     super.initState();
   }
 
   @override
   void dispose() {
-    if (_isCrazyMode) _timer.cancel();
+    if (_isCrazyMode || _isExtreme) _timer.cancel();
     super.dispose();
   }
   // color code ends here
@@ -182,8 +186,9 @@ class _MainPageState extends State<MainPage> {
     return Consumer<NavigationUseCase>(
       builder: (context, navUseCase, child) {
         return Scaffold(
-          backgroundColor:
-              _isCrazyMode ? mainColorScheme.middleButton : Colors.white,
+          backgroundColor: _isCrazyMode || _isExtreme
+              ? mainColorScheme.middleButton
+              : Colors.white,
           body: Stack(
             children: [
               SizedBox(
