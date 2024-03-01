@@ -21,7 +21,7 @@ Future<void> main() async {
   await LocalNotificationService().init();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    await messaging.requestPermission(
+  await messaging.requestPermission(
     alert: true,
     announcement: false,
     badge: true,
@@ -29,7 +29,7 @@ Future<void> main() async {
     criticalAlert: false,
     provisional: false,
     sound: true,
-    );
+  );
 
   runApp(const MyApp());
 }
@@ -43,11 +43,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-    void initState() {
-      FirebaseMessaging.instance
-          .getToken()
-          .then((value) => {debugPrint("FCM Token Is: "), debugPrint(value)});
-      super.initState();
+  void initState() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.notification != null) {
+      }
+    });
+
+    FirebaseMessaging.instance
+        .getToken()
+        .then((value) => {debugPrint("FCM Token Is: "), debugPrint(value)});
+    super.initState();
   }
 
   @override

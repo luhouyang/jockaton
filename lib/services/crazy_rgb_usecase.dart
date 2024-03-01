@@ -9,11 +9,13 @@ class CrazyRGBUsecase extends ChangeNotifier {
   Color currentColor = MyColors().gamingRGB[0];
 
   bool isCrazyMode = false;
+  bool isExtremeCrazy = false;
 
   CrazyRGBUsecase() {
-    timer = Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
-      currentColorIndex =
-          (currentColorIndex + Random().nextInt(50)) % MyColors().gamingRGB.length;
+    timer =
+        Timer.periodic(Duration(milliseconds: Random().nextInt(30)), (timer) {
+      currentColorIndex = (currentColorIndex + Random().nextInt(50)) %
+          MyColors().gamingRGB.length;
       currentColor = MyColors().gamingRGB[currentColorIndex];
       notifyListeners();
     });
@@ -21,6 +23,11 @@ class CrazyRGBUsecase extends ChangeNotifier {
 
   void changeCrazy() {
     isCrazyMode = !isCrazyMode;
+    notifyListeners();
+  }
+
+  void changeExtremeCrazy() {
+    isExtremeCrazy = !!isExtremeCrazy;
     notifyListeners();
   }
 }
