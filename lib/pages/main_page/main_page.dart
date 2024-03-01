@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:macrohard/pages/home_page.dart';
 import 'package:macrohard/pages/main_page/navigation_usecase.dart';
 import 'package:macrohard/pages/profile_page.dart';
 import 'package:macrohard/services/crazy_rgb_usecase.dart';
+import 'package:macrohard/services/user_usecase.dart';
 import 'package:macrohard/utilities/my_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
@@ -66,6 +68,7 @@ class _MainPageState extends State<MainPage> {
   Future<void> exCrazyButton() async {
     CrazyRGBUsecase crazyRGBUsecase =
         Provider.of<CrazyRGBUsecase>(context, listen: false);
+    UserUsecase userUsecase = Provider.of<UserUsecase>(context, listen: false);
     if (!_isExtreme) {
       crazyRGBUsecase.changeExtremeCrazy();
       crazyRGBUsecase.changeCrazy();
@@ -74,6 +77,7 @@ class _MainPageState extends State<MainPage> {
       _isPlaySounds = !_isPlaySounds;
       _isVibration = !_isVibration;
       _isBrightness = !_isBrightness;
+      userUsecase.addWater(FirebaseAuth.instance.currentUser!.uid);
       _startTimer();
     } else {
       crazyRGBUsecase.changeExtremeCrazy();
@@ -169,8 +173,8 @@ class _MainPageState extends State<MainPage> {
         Provider.of<CrazyRGBUsecase>(context, listen: false);
     _isCrazyMode = crazyRGBUsecase.isCrazyMode;
     if (_isCrazyMode) {
-        _startTimer();
-      }
+      _startTimer();
+    }
     super.initState();
   }
 
