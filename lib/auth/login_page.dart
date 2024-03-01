@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _isSignIn = true;
 
   final _confetticontroller = ConfettiController();
-  bool _confetPlay = false;
+  bool confetPlay = false;
 
   // copy paste this for color
   bool _isCrazyMode = false;
