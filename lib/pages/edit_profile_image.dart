@@ -360,7 +360,7 @@ class _EditProfileImageState extends State<EditProfileImage> {
   // web image picker
   /*
   String defaultImageUrl =
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT-uamOCwtEATju3lIp_LhwO_53fDgzjVaLCGDCmkldq57V9ipqCgPJ-T7vxGFF5mYEZs&usqp=CAU';
+      'https://cdn4.iconfinder.com/data/icons/social-media-and-logos-11/32/Logo_Google-512.png';
   String selectedFile = '';
   XFile? webFile;
   Uint8List? webImageBytes;
